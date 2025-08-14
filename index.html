@@ -1,16 +1,66 @@
-<div style="width:440px;background:#fff;border-radius:20px;box-shadow:0 6px 20px rgba(0,0,0,0.08);padding:20px;font-family:'Pretendard',sans-serif;position:relative;line-height:1.6;">
-  
-  <!-- 새로고침 버튼 -->
-  <button onclick="refreshQuote()" 
-    style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:18px;cursor:pointer;">🔄</button>
-  
-  <!-- 제목 -->
-  <h2 style="margin:0 0 14px 0;font-size:18px;font-weight:bold;color:#000;text-align:center;">오늘의 성장 한 줄</h2>
-  
-  <!-- 문구 (직접 수정 가능) -->
-  <p id="quote" contenteditable="true" 
-     style="font-size:14px;color:#333;margin:0;text-align:center;outline:none;">
-  </p>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투두투 오늘의 성장 한 줄</title>
+<style>
+  body {
+    margin: 0;
+    padding: 20px;
+    font-family: 'Pretendard', sans-serif;
+    background: #f5f5f5;
+  }
+  .container {
+    width: 100%;
+    max-width: 440px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    padding: 20px;
+    position: relative;
+    line-height: 1.6;
+    box-sizing: border-box;
+    margin: 0 auto;
+  }
+  .refresh-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  h1.page-title {
+    text-align: center;
+    font-size: 22px;
+    margin: 0 0 20px;
+    font-weight: bold;
+    color: #000;
+  }
+  h2 {
+    margin: 0 0 14px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    text-align: center;
+  }
+  #quote {
+    font-size: 14px;
+    color: #333;
+    margin: 0;
+    text-align: center;
+    outline: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <button class="refresh-btn" onclick="refreshQuote()">🔄</button>
+  <h2>오늘의 성장 한줄</h2>
+  <p id="quote" contenteditable="true"></p>
 </div>
 
 <script>
@@ -123,12 +173,10 @@
   const quoteElement = document.getElementById("quote");
   const storageKey = "todoto_daily_quote";
 
-  // 저장
   function saveQuote(text) {
     localStorage.setItem(storageKey, text);
   }
 
-  // 불러오기
   function loadQuote() {
     const saved = localStorage.getItem(storageKey);
     if (saved) {
@@ -140,23 +188,22 @@
     }
   }
 
-  // 랜덤 선택
   function getRandomQuote() {
     return quotes[Math.floor(Math.random() * quotes.length)];
   }
 
-  // 새로고침 버튼 동작
   function refreshQuote() {
     const random = getRandomQuote();
     quoteElement.innerText = random;
     saveQuote(random);
   }
 
-  // 수정 시 저장
   quoteElement.addEventListener("input", () => {
     saveQuote(quoteElement.innerText);
   });
 
-  // 최초 로드
   loadQuote();
 </script>
+
+</body>
+</html>
