@@ -1,0 +1,162 @@
+<div style="width:440px;background:#fff;border-radius:20px;box-shadow:0 6px 20px rgba(0,0,0,0.08);padding:20px;font-family:'Pretendard',sans-serif;position:relative;line-height:1.6;">
+  
+  <!-- 새로고침 버튼 -->
+  <button onclick="refreshQuote()" 
+    style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:18px;cursor:pointer;">🔄</button>
+  
+  <!-- 제목 -->
+  <h2 style="margin:0 0 14px 0;font-size:18px;font-weight:bold;color:#000;text-align:center;">오늘의 성장 한 줄</h2>
+  
+  <!-- 문구 (직접 수정 가능) -->
+  <p id="quote" contenteditable="true" 
+     style="font-size:14px;color:#333;margin:0;text-align:center;outline:none;">
+  </p>
+</div>
+
+<script>
+  // ✏️ 명언 100개
+  const quotes = [
+    "오늘의 1%가 내일을 바꾼다.",
+    "Do something today that your future self will thank you for.",
+    "작은 시작이 큰 변화를 만든다.",
+    "Every day is a new beginning.",
+    "성공은 준비된 자에게 온다.",
+    "Don’t watch the clock; do what it does. Keep going.",
+    "포기하지 않는 것이 힘이다.",
+    "Great things never come from comfort zones.",
+    "행동이 전부다.",
+    "Push yourself, because no one else is going to do it for you.",
+    "오늘이 인생의 첫날인 것처럼 살아라.",
+    "Your limitation—it's only your imagination.",
+    "시작이 반이다.",
+    "Dream it. Wish it. Do it.",
+    "실패를 두려워하지 말라.",
+    "Success doesn’t just find you. You have to go out and get it.",
+    "조금씩이라도 전진하라.",
+    "Wake up with determination. Go to bed with satisfaction.",
+    "노력 없는 성취는 없다.",
+    "Do what you can with all you have, wherever you are.",
+    "한 걸음 한 걸음이 중요하다.",
+    "Small steps every day lead to big results.",
+    "기회는 스스로 만드는 것이다.",
+    "Stay positive, work hard, make it happen.",
+    "오늘을 헛되이 보내지 마라.",
+    "It always seems impossible until it's done.",
+    "어제보다 나은 오늘을 만들자.",
+    "Believe you can and you're halfway there.",
+    "목표 없는 꿈은 그냥 꿈일 뿐이다.",
+    "Don’t stop until you’re proud.",
+    "작은 습관이 큰 변화를 만든다.",
+    "Discipline is the bridge between goals and accomplishment.",
+    "변화는 불편함 속에서 나온다.",
+    "Your only limit is you.",
+    "매일 조금씩 나아지자.",
+    "Hard work beats talent when talent doesn’t work hard.",
+    "실패는 또 다른 기회다.",
+    "Start where you are. Use what you have. Do what you can.",
+    "기다리지 말고 시작하라.",
+    "The best way to get started is to quit talking and begin doing.",
+    "나를 믿어라.",
+    "You are stronger than you think.",
+    "지금 이 순간이 가장 소중하다.",
+    "Don’t limit your challenges. Challenge your limits.",
+    "포기하는 순간이 가장 후회된다.",
+    "Small progress is still progress.",
+    "할 수 있다고 믿어라.",
+    "Believe in yourself and all that you are.",
+    "행동 없이는 아무것도 변하지 않는다.",
+    "Action is the foundational key to all success.",
+    "매일 더 나아져라.",
+    "Better an oops than a what if.",
+    "지금이 시작하기 가장 좋은 때다.",
+    "The secret of getting ahead is getting started.",
+    "꾸준함이 힘이다.",
+    "Consistency is what transforms average into excellence.",
+    "변명은 성공을 방해한다.",
+    "Excuses will always be there for you. Opportunity won’t.",
+    "오늘도 해낼 수 있다.",
+    "You’ve got this.",
+    "어제보다 나은 내가 되자.",
+    "Be stronger than your excuses.",
+    "작은 노력들이 모여 위대한 것을 만든다.",
+    "Great things take time.",
+    "두려움보다 꿈을 크게 가져라.",
+    "Let your dreams be bigger than your fears.",
+    "변화를 두려워하지 마라.",
+    "Life begins at the end of your comfort zone.",
+    "작은 성취를 축하하라.",
+    "Celebrate every tiny victory.",
+    "도전이 없다면 성장은 없다.",
+    "Without challenge, there is no growth.",
+    "실패 속에서 배우자.",
+    "Failure is simply the opportunity to begin again.",
+    "매일 조금씩 전진하라.",
+    "Step by step, day by day.",
+    "열정이 에너지를 만든다.",
+    "Passion fuels progress.",
+    "지금의 나를 사랑하자.",
+    "Love yourself enough to work harder.",
+    "목표를 시각화하라.",
+    "Visualize your highest self.",
+    "마지막까지 해보자.",
+    "It’s not over until you win.",
+    "작은 꾸준함이 큰 변화를 만든다.",
+    "Slow progress is better than no progress.",
+    "기회는 준비된 자의 것이다.",
+    "Luck is what happens when preparation meets opportunity.",
+    "오늘은 다시 오지 않는다.",
+    "Make today count.",
+    "성장은 고통을 수반한다.",
+    "Growth is painful. Change is painful.",
+    "아무것도 하지 않으면 아무 일도 일어나지 않는다.",
+    "Nothing will work unless you do.",
+    "최선을 다하자.",
+    "Do your best and forget the rest.",
+    "포기하지 않는 한 실패가 아니다.",
+    "You only fail when you stop trying.",
+    "매일의 작은 선택이 미래를 만든다.",
+    "Your future is created by what you do today.",
+    "지금이 바로 그 순간이다.",
+    "Now is the time."
+  ];
+
+  const quoteElement = document.getElementById("quote");
+  const storageKey = "todoto_daily_quote";
+
+  // 저장
+  function saveQuote(text) {
+    localStorage.setItem(storageKey, text);
+  }
+
+  // 불러오기
+  function loadQuote() {
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+      quoteElement.innerText = saved;
+    } else {
+      const random = getRandomQuote();
+      quoteElement.innerText = random;
+      saveQuote(random);
+    }
+  }
+
+  // 랜덤 선택
+  function getRandomQuote() {
+    return quotes[Math.floor(Math.random() * quotes.length)];
+  }
+
+  // 새로고침 버튼 동작
+  function refreshQuote() {
+    const random = getRandomQuote();
+    quoteElement.innerText = random;
+    saveQuote(random);
+  }
+
+  // 수정 시 저장
+  quoteElement.addEventListener("input", () => {
+    saveQuote(quoteElement.innerText);
+  });
+
+  // 최초 로드
+  loadQuote();
+</script>
